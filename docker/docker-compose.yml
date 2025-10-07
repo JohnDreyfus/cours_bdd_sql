@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:17
+    container_name: web-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: cours
+      TZ: Europe/Paris
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dev -d cours"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - dbnet
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: web-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: adminpass
+      PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: "True"
+      TZ: Europe/Paris
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - dbnet
+
+networks:
+  dbnet:
+
+volumes:
+  pgdata:
+  pgadmin:
