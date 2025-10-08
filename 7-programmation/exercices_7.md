@@ -9,12 +9,15 @@
 CREATE OR REPLACE FUNCTION appliquer_remise(/* vos paramètres */)
 RETURNS /* votre type */
 LANGUAGE plpgsql
-AS $
+AS $$
 BEGIN
     -- Votre code
 END;
-$;
+$$;
 ```
+-- Test 1 : Remise de 20% sur 100€
+SELECT appliquer_remise(100, 20);
+
 
 ### Exercice 2 : Procédure d'annulation de commande
 ```sql
@@ -22,11 +25,11 @@ $;
 
 CREATE OR REPLACE PROCEDURE annuler_commande(/* vos paramètres */)
 LANGUAGE plpgsql
-AS $
+AS $$
 BEGIN
     -- Votre code
 END;
-$;
+$$;
 ```
 
 ### Exercice 3 : Trigger de validation
@@ -36,11 +39,11 @@ $;
 CREATE OR REPLACE FUNCTION verifier_stock_avant_commande()
 RETURNS TRIGGER
 LANGUAGE plpgsql
-AS $
+AS $$
 BEGIN
     -- Votre code
 END;
-$;
+$$;
 
 -- Créer le trigger
 ```
@@ -53,9 +56,13 @@ $;
 CREATE OR REPLACE FUNCTION stats_client(p_client_id INTEGER)
 RETURNS TABLE(/* vos colonnes */)
 LANGUAGE plpgsql
-AS $
+AS $$
 BEGIN
     -- Votre code
 END;
-$;
+$$;
 ```
+
+
+
+
