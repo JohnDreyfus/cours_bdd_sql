@@ -45,7 +45,7 @@ ROLLBACK;
 -- Vérification :
 SELECT COUNT(*) FROM avis_produits WHERE client_id = 1;
 
--- EXERCICE 3 ⭐⭐ INTERMÉDIAIRE
+-- EXERCICE 3
 -- Créer une transaction avec SAVEPOINT
 -- Objectif : Utiliser les points de sauvegarde
 /*
@@ -83,7 +83,7 @@ COMMIT;
 SELECT * FROM clients WHERE email = 'test@test.fr';
 
 
--- EXERCICE 4 ⭐⭐ INTERMÉDIAIRE
+-- EXERCICE 4
 -- Gérer la concurrence avec FOR UPDATE
 -- Objectif : Verrouiller des lignes pour modification
 /*
