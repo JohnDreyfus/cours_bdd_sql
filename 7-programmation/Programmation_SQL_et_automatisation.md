@@ -25,7 +25,7 @@ Ce langage permet de **centraliser la logique métier dans la base de données**
 
 Un bloc PL/pgSQL suit cette structure :
 ```sql
-DO $
+DO $$
 DECLARE
     -- Déclaration des variables
     compteur INTEGER := 0;
@@ -36,7 +36,7 @@ BEGIN
 EXCEPTION
     WHEN others THEN
         RAISE WARNING 'Une erreur est survenue : %', SQLERRM;
-END $;
+END $$;
 ```
 #### **Explication**
 - DO : exécute un bloc anonyme (sans créer de fonction).
@@ -55,7 +55,7 @@ Les variables peuvent être de **tout type PostgreSQL** (integer, text, date, js
 - Assignations : `:= Valeur ou SELECT ... INTO`.
 #### **Exemple :**
 ```sql
-DO $
+DO $$
 DECLARE
     v_nom TEXT := 'PostgreSQL';
     v_annee INT := 2025;
@@ -63,7 +63,7 @@ DECLARE
 BEGIN
     v_message := format('Bienvenue dans %s version %s', v_nom, v_annee);
     RAISE NOTICE '%', v_message;
-END $;
+END $$;
 ```
 
 > 📘 On peut aussi copier la structure d'une table :
@@ -113,13 +113,13 @@ Elles sont souvent utilisées pour encapsuler une logique métier réutilisable.
 CREATE OR REPLACE FUNCTION calcul_ttc(prix_ht NUMERIC, taux NUMERIC)
 RETURNS NUMERIC
 LANGUAGE plpgsql
-AS $
+AS $$
 BEGIN
     IF taux < 0 THEN
         RAISE EXCEPTION 'Taux négatif interdit';
     END IF;
     RETURN round(prix_ht * (1 + taux), 2);
-END $;
+END $$;
 ```
 ##### **Appel :**
 ```sql
@@ -132,11 +132,11 @@ SELECT calcul_ttc(100, 0.20);  -- Résultat : 120.00
 CREATE OR REPLACE FUNCTION clients_par_ville(ville TEXT)
 RETURNS TABLE(id BIGINT, nom TEXT)
 LANGUAGE plpgsql
-AS $
+AS $$
 BEGIN
     RETURN QUERY
     SELECT id, nom FROM clients WHERE ville = clients_par_ville.ville;
-END $;
+END $$;
 ```
 ##### **Appel :**
 ```sql
@@ -151,11 +151,11 @@ Les **procédures** sont similaires aux fonctions, mais elles **ne retournent pa
 ```sql
 CREATE OR REPLACE PROCEDURE ajout_client(nom TEXT, ville TEXT)
 LANGUAGE plpgsql
-AS $
+AS $$
 BEGIN
     INSERT INTO clients(nom, ville) VALUES (nom, ville);
     COMMIT;
-END $;
+END $$;
 
 CALL ajout_client('Dupont', 'Lyon');
 ```
@@ -193,11 +193,11 @@ Normaliser une adresse email avant insertion.
 CREATE OR REPLACE FUNCTION normaliser_email()
 RETURNS trigger
 LANGUAGE plpgsql
-AS $
+AS $$
 BEGIN
     NEW.email := lower(trim(NEW.email));
     RETURN NEW;
-END $;
+END $$;
 
 CREATE TRIGGER trg_normaliser_email
 BEFORE INSERT OR UPDATE ON utilisateurs

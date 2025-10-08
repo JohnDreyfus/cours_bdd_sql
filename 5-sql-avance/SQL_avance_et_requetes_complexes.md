@@ -202,42 +202,6 @@ JOIN clients c ON c.id = cv.client_id
 ORDER BY cv.total_achats DESC;
 ```
 
-### **5.3.4 CTE récursif (WITH RECURSIVE)**
-
-Permet de parcourir une hiérarchie (ex. catégories).
-```sql
--- Arbre complet des catégories
-WITH RECURSIVE arbre_categories AS (
-    -- Ancre : catégories racines
-    SELECT 
-        id, 
-        nom, 
-        parent_id, 
-        1 AS niveau,
-        nom::TEXT AS chemin
-    FROM categories 
-    WHERE parent_id IS NULL
-    
-    UNION ALL
-    
-    -- Récursion : sous-catégories
-    SELECT 
-        c.id, 
-        c.nom, 
-        c.parent_id, 
-        ac.niveau + 1,
-        ac.chemin || ' > ' || c.nom
-    FROM categories c
-    JOIN arbre_categories ac ON c.parent_id = ac.id
-)
-SELECT 
-    REPEAT('  ', niveau - 1) || nom AS categorie_indentee,
-    niveau,
-    chemin
-FROM arbre_categories
-ORDER BY chemin;
-```
-
 ---
 ## **5.4 Vues et vues matérialisées**
 
@@ -274,6 +238,20 @@ SELECT * FROM v_meilleurs_clients;
 
 Une vue matérialisée **stocke les résultats**.
 ```sql
+CREATE MATERIALIZED VIEW mv_stats_ventes_mensuelles AS
+SELECT
+    date_trunc('month', c.date_commande) AS mois,
+    COUNT(DISTINCT c.id) AS nombre_commandes,
+    COUNT(DISTINCT c.client_id) AS nombre_clients,
+    SUM(c.montant_ttc) AS chiffre_affaires,
+    AVG(c.montant_ttc) AS panier_moyen,
+    SUM(lc.quantite) AS articles_vendus
+FROM commandes c
+         JOIN lignes_commande lc ON c.id = lc.commande_id
+WHERE c.statut != 'annulee'
+GROUP BY date_trunc('month', c.date_commande)
+ORDER BY mois DESC;
+
 -- Rafraîchir la vue matérialisée des stats mensuelles
 REFRESH MATERIALIZED VIEW CONCURRENTLY mv_stats_ventes_mensuelles;
 
