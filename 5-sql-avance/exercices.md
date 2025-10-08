@@ -1,37 +1,74 @@
 ## Exercices Module 5 - SQL avancé
 
-### Exercice 1 : Top 5 des produits les plus vendus
-```sql
--- Écrire une requête qui retourne les 5 produits les plus vendus
--- avec le nombre total de ventes et le CA généré
+-- EXERCICE 13
+-- Requêtes d'agrégation simples
+-- Objectif : Utiliser COUNT, SUM, AVG
+/*
+Instructions :
+1. Compter le nombre total de produits
+2. Calculer le prix moyen des produits
+3. Trouver le produit le plus cher
+4. Compter combien de clients ont une newsletter active
+*/
 
--- Votre requête ici
-```
+-- À COMPLÉTER :
+-- 1.
 
-### Exercice 2 : Clients sans achat depuis 30 jours
-```sql
--- Trouver tous les clients qui n'ont pas commandé depuis 30 jours
 
--- Votre requête ici
-```
+-- 2.
 
-### Exercice 3 : CTE - Panier moyen par catégorie
-```sql
--- Utiliser un CTE pour calculer le panier moyen par catégorie de produits
 
--- Votre requête ici
-```
+-- 3.
 
-### Exercice 4 : Window Function - Évolution des ventes
-```sql
--- Afficher le CA mensuel avec une colonne montrant l'évolution par rapport au mois précédent
 
--- Votre requête ici
-```
+-- 4.
 
-### Exercice 5 : JSONB - Filtrage avancé
-```sql
--- Trouver tous les produits Apple avec au moins 16GB de RAM
 
--- Votre requête ici
-```
+
+-- EXERCICE 14
+-- Jointures simples
+-- Objectif : Maîtriser INNER JOIN
+/*
+Instructions :
+Créer une requête qui affiche :
+- Le nom du client
+- Le numéro de commande
+- La date de commande
+- Le statut
+
+Trier par date décroissante, limiter à 10 résultats
+*/
+
+-- À COMPLÉTER :
+
+
+-- EXERCICE 15
+-- Utiliser une CTE (WITH)
+-- Objectif : Structurer une requête complexe
+/*
+Instructions :
+Créer une CTE qui :
+1. Calcule le total des achats par client
+2. Compte le nombre de commandes par client
+3. Affiche uniquement les clients ayant dépensé plus de 1000€
+4. Trie par montant total décroissant
+*/
+
+-- À COMPLÉTER :
+
+
+-- EXERCICE 16
+-- Window Functions
+-- Objectif : Utiliser RANK() et ROW_NUMBER()
+/*
+Instructions :
+1. Classer les produits par prix dans chaque catégorie
+2. Afficher le rang de chaque produit
+3. Afficher aussi le prix moyen de la catégorie
+4. Filtrer pour ne garder que les 3 premiers de chaque catégorie
+*/
+
+-- À COMPLÉTER :
+
+
+-- 
