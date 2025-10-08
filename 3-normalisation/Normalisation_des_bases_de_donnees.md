@@ -144,37 +144,6 @@ CREATE TABLE clients (
 Chaque attribut dépend **directement de la clé primaire**, et non d'un autre attribut.
 
 ---
-### **3.2.4 – Forme Normale de Boyce-Codd (BCNF)**
-
-**Principe :**
-- Extension stricte de la 3NF.
-- Pour chaque **dépendance fonctionnelle X → Y**, X doit être une **super-clé**.
-#### **Exemple**
-Si une salle (num_salle) a un seul **professeur responsable** (prof_id), mais un professeur peut gérer plusieurs salles :
-
-```sql
-CREATE TABLE cours (
-    prof_id INTEGER,
-    num_salle TEXT,
-    horaire TEXT,
-    PRIMARY KEY (prof_id, num_salle)
-);
-```
-Ici, num_salle → prof_id viole BCNF car num_salle n'est pas une clé.
-#### **Correction :**
-```sql
-CREATE TABLE salles (
-    num_salle TEXT PRIMARY KEY,
-    prof_id INTEGER NOT NULL
-);
-
-CREATE TABLE cours (
-    num_salle TEXT REFERENCES salles(num_salle),
-    horaire TEXT,
-    PRIMARY KEY (num_salle, horaire)
-);
-```
-
 
 ### 3.3 Vérification de la normalisation
 
