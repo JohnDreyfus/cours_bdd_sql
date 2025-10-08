@@ -139,23 +139,7 @@ SELECT * FROM commandes WHERE date_commande > '2024-01-01';
 (l'ordre des colonnes dans l'index compte)
 
 ---
-### **6.3.2. Index partiels**
-
-Permet de créer un index sur une **partie des données** (filtrée par une condition).
-#### **Exemple :**
-```sql
-CREATE INDEX idx_factures_payees ON factures (date_paiement)
-WHERE statut = 'payée';
-```
-
-Utilisé uniquement pour :
-```sql
-SELECT * FROM factures WHERE statut = 'payée' AND date_paiement > '2025-01-01';
-```
-Avantage : gain de place et de performance sur les grands volumes.
-
----
-### **6.3.3. Index sur expression**
+### **6.3.2. Index sur expression**
 
 Index basé sur le **résultat d'une expression**.
 #### **Exemple :**
@@ -205,36 +189,4 @@ Index Scan using idx_client_nom on clients  (cost=0.15..8.17 rows=1 width=50)
 - actual time → durée réelle
 - rows → nombre de lignes trouvées
 - loops → nombre d'exécutions du plan
-
----
-### **6.4.3. Outils utiles**
-
-- ANALYZE : met à jour les statistiques du planificateur.
-```sql
-ANALYZE clients;
-```
-
-- VACUUM : nettoie les tuples morts et améliore les performances.
-```sql
-VACUUM (ANALYZE);
-```
-
----
-## **6.5. Stratégies d'optimisation**
-
-### **Bonnes pratiques :**
-
-1. **Analyser les requêtes lentes** avec EXPLAIN ANALYZE.
-
-2. **Créer des index ciblés**, pas systématiques.
-
-3. **Éviter les fonctions non indexées** dans les clauses WHERE.
-
-4. **Mettre à jour les statistiques** (ANALYZE, VACUUM).
-
-5. **Vérifier les jointures** : préférer les clés numériques aux textes.
-
-6. **Limiter les sous-requêtes imbriquées** si possible.
-
-7. **Utiliser des vues matérialisées** pour des résultats pré-calculés.
 
