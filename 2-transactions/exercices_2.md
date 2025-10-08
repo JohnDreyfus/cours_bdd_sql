@@ -1,48 +1,114 @@
-## Configuration initiale
+-- EXERCICE 1
+-- Créer une transaction qui met à jour le prix de deux produits
+-- Objectif : Comprendre BEGIN, COMMIT
+/*
+Instructions :
+1. Démarrer une transaction
+2. Augmenter le prix du produit id=8 de 5€
+3. Diminuer le prix du produit id=9 de 10€
+4. Valider la transaction
+5. Vérifier les nouveaux prix
+*/
 
-Avant de commencer, assurez-vous d'être sur le bon schéma :
-
-```sql
-SET search_path TO ecommerce;
-
--- Cache hit ratio (doit être > 99%)
-SELECT 
-    sum(heap_blks_read) as heap_read,
-    sum(heap_blks_hit) as heap_hit,
-    ROUND(sum(heap_blks_hit) / NULLIF(sum(heap_blks_hit) + sum(heap_blks_read), 0) * 100, 2) AS cache_hit_ratio
-FROM pg_statio_user_tables
-WHERE schemaname = 'ecommerce';
-
--- Bloat des tables (gonflement)
-SELECT 
-    schemaname,
-    tablename,
-    pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) AS taille_totale,
-    ROUND(100 * pg_total_relation_size(schemaname||'.'||tablename) / 
-          NULLIF(pg_database_size(current_database()), 0), 2) AS pourcent_bdd
-FROM pg_tables
-WHERE schemaname = 'ecommerce'
-ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC;
-```
-
----
-
-## Exercices Module 2 - Transactions
-
-### Exercice 1 : Transfert de stock
-```sql
--- Transférer 5 unités du produit 5 vers le produit 6
--- En utilisant une transaction avec SAVEPOINT
+-- À COMPLÉTER :
+BEGIN;
 
 -- Votre code ici
-```
 
-### Exercice 2 : Gestion d'erreur
-```sql
--- Créer une commande avec plusieurs lignes
--- Si une ligne échoue, annuler uniquement cette ligne
--- Garder les lignes valides
+
+COMMIT;
+
+-- Vérification :
+SELECT id, nom, prix FROM produits WHERE id IN (8, 9);
+
+
+-- EXERCICE 2
+-- Utiliser ROLLBACK pour annuler une modification
+-- Objectif : Comprendre l'annulation de transaction
+/*
+Instructions :
+1. Démarrer une transaction
+2. Supprimer tous les avis du client id=1
+3. Vérifier combien d'avis ont été supprimés
+4. Finalement, annuler la transaction (ROLLBACK)
+5. Vérifier que les avis sont toujours présents
+*/
+
+-- À COMPLÉTER :
+BEGIN;
 
 -- Votre code ici
-```
 
+
+ROLLBACK;
+
+-- Vérification :
+SELECT COUNT(*) FROM avis_produits WHERE client_id = 1;
+
+-- EXERCICE 3 ⭐⭐ INTERMÉDIAIRE
+-- Créer une transaction avec SAVEPOINT
+-- Objectif : Utiliser les points de sauvegarde
+/*
+Instructions :
+1. Démarrer une transaction
+2. Créer un nouveau client (nom: Test, prenom: User, email: test@test.fr, password: 'test123')
+3. Créer un SAVEPOINT après l'insertion du client
+4. Créer une commande pour ce client
+5. Essayer d'ajouter une ligne de commande avec un produit inexistant (id=999)
+6. Revenir au SAVEPOINT (le client reste, la commande est annulée)
+7. Valider la transaction
+*/
+
+-- À COMPLÉTER :
+BEGIN;
+
+-- Insérer le client
+
+
+-- Créer le savepoint
+
+
+-- Créer la commande
+
+
+-- Tenter d'ajouter une ligne (va échouer)
+
+
+-- Revenir au savepoint
+
+
+COMMIT;
+
+-- Vérification :
+SELECT * FROM clients WHERE email = 'test@test.fr';
+
+
+-- EXERCICE 4 ⭐⭐ INTERMÉDIAIRE
+-- Gérer la concurrence avec FOR UPDATE
+-- Objectif : Verrouiller des lignes pour modification
+/*
+Instructions :
+1. Démarrer une transaction
+2. Sélectionner le produit id=1 avec FOR UPDATE (verrou)
+3. Vérifier le stock actuel
+4. Si stock > 5, diminuer de 5
+5. Afficher le nouveau stock
+6. Valider
+*/
+
+-- À COMPLÉTER :
+BEGIN;
+
+-- Verrouiller et récupérer le produit
+
+
+-- Mettre à jour si stock suffisant
+
+
+COMMIT;
+
+-- Vérification :
+SELECT id, nom, stock FROM produits WHERE id = 1;
+
+
+--
