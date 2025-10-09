@@ -1,14 +1,6 @@
 
 # **10 — Sauvegarde, restauration et maintenance** {#10-sauvegarde}
 
-## **Objectifs pédagogiques**
-
-- Maîtriser les différentes stratégies de sauvegarde PostgreSQL
-- Savoir restaurer une base de données dans différents contextes
-- Comprendre les mécanismes de maintenance (VACUUM, ANALYZE)
-- Mettre en place une réplication pour la haute disponibilité
-- Planifier et automatiser les tâches de maintenance
-
 ---
 
 ## **10.1 Stratégies de sauvegarde**
