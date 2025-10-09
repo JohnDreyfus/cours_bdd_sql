@@ -21,6 +21,3 @@ yarn-error.log*
 
 # Environment / secrets (bonne pratique générale)
 .env
-
-9-securite/
-10-sauvegarde/
