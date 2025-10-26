@@ -1,5 +1,52 @@
 # 2. Concepts fondamentaux
-## 2.1 Modèle de données
+
+## 2.1 Le modèle BASE dans MongoDB
+
+MongoDB ne suit pas le modèle **ACID** classique des bases de données relationnelles, mais plutôt le modèle **BASE**, plus flexible et adapté aux systèmes distribués.
+
+**BASE** signifie :
+- **Basically Available** (Fondamentalement disponible)
+- **Soft state** (État flexible)
+- **Eventual consistency** (Cohérence finale)
+
+### Basically Available (Fondamentalement disponible)
+
+MongoDB garantit que le système reste **disponible** même en cas de panne partielle.
+
+Cela signifie qu’une requête obtiendra toujours une réponse, même si certaines données ne sont pas à jour.
+
+**Exemple :**
+Si un nœud du cluster est hors ligne, un autre peut encore répondre aux requêtes de lecture.
+```
+db.produits.find() // renvoie les données disponibles sur un autre nœud
+```
+
+### Soft State (État flexible)
+
+L’état du système peut **changer avec le temps** sans intervention.
+
+Les répliques peuvent ne pas être synchronisées immédiatement, mais elles se mettront à jour automatiquement.
+
+**Exemple :**
+Après une écriture sur un nœud principal (primary), les nœuds secondaires (secondary) se mettent à jour après un court délai.
+```
+// Écriture sur le primary
+db.produits.insertOne({ nom: "Clavier", prix: 89.99 })
+```
+Les autres nœuds répliquent ensuite cette donnée.
+### Eventual Consistency (Cohérence finale)
+
+MongoDB assure une **cohérence à terme** : les données deviennent identiques sur tous les nœuds après propagation.
+
+Il peut y avoir un court délai pendant lequel certaines répliques ont des données plus anciennes.
+
+**Exemple :**
+Une lecture juste après une écriture peut retourner l’ancienne version du document, mais après quelques secondes, toutes les copies seront cohérentes.
+
+
+MongoDB privilégie la **disponibilité** et la **résilience** au détriment d’une cohérence immédiate, ce qui le rend particulièrement adapté aux systèmes distribués et aux applications à grande échelle.
+
+## 2.2 Modèle de données
 
 ### Documents et collections
 
@@ -83,20 +130,20 @@
 ```javascript
 // _id personnalisé
 {
-    "_id": "USER001",
-    "nom": "Martin"
+  "_id": "USER001",
+  "nom": "Martin"
 }
 
 // _id numérique
 {
-    "_id": 12345,
-    "reference": "REF-A"
+  "_id": 12345,
+  "reference": "REF-A"
 }
 ```
 
 ---
 
-## 2.2 Différences avec le modèle relationnel
+## 2.3 Différences avec le modèle relationnel
 
 ### Comparaison terminologique
 
@@ -126,20 +173,20 @@
 ```javascript
 // Document 1
 {
-    "_id": 1,
-    "nom": "Dupont",
-    "email": "dupont@example.com"
+  "_id": 1,
+  "nom": "Dupont",
+  "email": "dupont@example.com"
 }
 
 // Document 2 - structure différente dans la même collection
 {
-    "_id": 2,
-    "nom": "Martin",
-    "email": "martin@example.com",
-    "telephone": "0612345678",
-    "adresse": {
+  "_id": 2,
+  "nom": "Martin",
+  "email": "martin@example.com",
+  "telephone": "0612345678",
+  "adresse": {
     "ville": "Lyon"
-}
+  }
 }
 ```
 
@@ -161,16 +208,16 @@ id | user_id | total
 **Approche MongoDB (dénormalisée)**
 ```javascript
 {
-    "_id": 1,
-        "nom": "Dupont",
-        "email": "dupont@example.com",
-        "commandes": [
-        {
-            "numero": "CMD001",
-            "total": 150.00,
-            "date": ISODate("2024-10-20")
-        }
-    ]
+  "_id": 1,
+  "nom": "Dupont",
+  "email": "dupont@example.com",
+  "commandes": [
+    {
+      "numero": "CMD001",
+      "total": 150.00,
+      "date": ISODate("2024-10-20")
+    }
+  ]
 }
 ```
 
@@ -187,12 +234,12 @@ id | user_id | total
 **1. Embedding (embarqué) - recommandé pour relations 1-to-1 et 1-to-few**
 ```javascript
 {
-    "_id": 1,
-        "titre": "Introduction à MongoDB",
-        "auteur": {
-        "nom": "Dupont",
-            "email": "dupont@example.com"
-    }
+  "_id": 1,
+  "titre": "Introduction à MongoDB",
+  "auteur": {
+    "nom": "Dupont",
+    "email": "dupont@example.com"
+  }
 }
 ```
 
@@ -200,22 +247,22 @@ id | user_id | total
 ```javascript
 // Collection articles
 {
-    "_id": 1,
-    "titre": "Introduction à MongoDB",
-    "auteur_id": 42
+  "_id": 1,
+  "titre": "Introduction à MongoDB",
+  "auteur_id": 42
 }
 
 // Collection auteurs
 {
-    "_id": 42,
-    "nom": "Dupont",
-    "email": "dupont@example.com"
+  "_id": 42,
+  "nom": "Dupont",
+  "email": "dupont@example.com"
 }
 ```
 
 ---
 
-## 2.3 Bases, collections et documents
+## 2.4 Bases, collections et documents
 
 ### Organisation hiérarchique
 ```
